@@ -29,8 +29,11 @@ jobs:
         java-version: '17'
         distribution: 'temurin'
         
-    - name: Gradle 캐싱
-    - uses: actions/cache@v3
+    - name: Grant execute permission for gradlew
+      run: chmod +x ./gradlew
+
+    - name: Cache with Gradle
+      uses: actions/cache@v2
       with:
         path: |
           ~/.gradle/caches
@@ -38,24 +41,9 @@ jobs:
         key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
         restore-keys: |
           ${{ runner.os }}-gradle-
-      
-    - name: Gradle 명령 실행을 위한 권한을 부여합니다
-      run: chmod +x gradlew
-      
-    - name: Build with Gradle
-      uses: gradle/gradle-build-action@bd5760595778326ba7f1441bcf7e88b49de61a25 # v2.6.0
-      with:
-        arguments: build
-        
-    - name: 테스트 결과를 PR에 코멘트로 등록합니다
-      uses: EnricoMi/publish-unit-test-result-action@v1
-      if: always()
-      with:
-        files: '**/build/test-results/test/TEST-*.xml'
-    - name: 테스트 실패 시, 실패한 코드 라인에 Check 코멘트를 등록합니다
-      uses: mikepenz/action-junit-report@v3
-      if: always()
-      with:
-        report_paths: '**/build/test-results/test/TEST-*.xml'
-        token: ${{ github.token }}
 
+    - name: Build with Gradle
+      run: ./gradlew build
+
+    - name: Test with Gradle
+      run: ./gradlew test
