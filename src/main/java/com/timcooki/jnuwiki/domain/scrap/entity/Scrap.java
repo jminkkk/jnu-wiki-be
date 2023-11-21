@@ -1,5 +1,7 @@
 package com.timcooki.jnuwiki.domain.scrap.entity;
 
+import com.timcooki.jnuwiki.domain.docs.entity.Docs;
+import com.timcooki.jnuwiki.domain.member.entity.Member;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -31,5 +33,13 @@ public class Scrap implements Serializable {
         this.memberId = memberId;
         this.docsId = docsId;
         this.createdAt = createdAt;
+    }
+
+    public static Scrap of(Member member, Docs docs) {
+        return Scrap.builder()
+                .memberId(member.getMemberId())
+                .docsId(docs.getDocsId())
+                .createdAt(LocalDateTime.now())
+                .build();
     }
 }
