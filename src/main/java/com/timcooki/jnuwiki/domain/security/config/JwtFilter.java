@@ -25,18 +25,19 @@ import java.io.IOException;
 public class JwtFilter extends OncePerRequestFilter {
     private final MemberSecurityService memberSecurityService;
     //@Value("${jwt.secret}")
-    private final String secretKey="test.test";
+    private final String secretKey = "test.test";
 
 
     @Override
     // 인증 필터
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
 
         // HEADER/AUTHORIZATION에서 ACCESSTOKEN을 가져온다.
         final String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
 
         // toekn이 없는경우 || 토근이 Bearer로 시작하지 않는 경우
-        if(authorization==null || !authorization.startsWith("Bearer ")){
+        if (authorization == null || !authorization.startsWith("Bearer ")) {
             //log.error("authorization 을 잘못 보냈습니다..");
             filterChain.doFilter(request, response);
             return;
@@ -46,9 +47,9 @@ public class JwtFilter extends OncePerRequestFilter {
         String token = authorization.split(" ")[1];
 
         // Token Expired되었는지 여부 판단.
-        if (JwtUtil.isExpired(token, secretKey)){
+        if (JwtUtil.isExpired(token, secretKey)) {
             log.error("Token이 만료되었습니다.");
-            filterChain.doFilter(request,response);
+            filterChain.doFilter(request, response);
             return;
         }
 
@@ -58,7 +59,6 @@ public class JwtFilter extends OncePerRequestFilter {
         // MemberRole을 Token에서 꺼낸다. // TODO - 삭제(log용)
         String memberRole = JwtUtil.getMemberRole(token, secretKey);
         log.info("memberRole: {}", memberRole);
-
 
         UserDetails userDetails = memberSecurityService.loadUserByUsername(memberEmail);
         // 권한 부여
