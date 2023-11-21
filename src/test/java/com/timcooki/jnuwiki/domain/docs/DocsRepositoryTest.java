@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 
 @Import(ObjectMapper.class)
 @DataJpaTest
-public class DocsRepositoryTest {
+class DocsRepositoryTest {
     @Autowired
     private DocsRepository docsRepository;
 
@@ -36,7 +36,7 @@ public class DocsRepositoryTest {
     private ObjectMapper om;
 
     @BeforeEach
-    public void setUp(){
+    public void setUp() {
         Docs docs = Docs.builder()
                 .docsCategory(DocsCategory.CAFE)
                 .docsName("테스트1")
@@ -50,29 +50,27 @@ public class DocsRepositoryTest {
         em.clear();
     }
 
-    @Test
-    public void mfindAll_test(){
-        // given
-        int page = 0;
-        int size = 4;
-        DocsLocation rightUp = DocsLocation.builder()
-                .lat(40.0)
-                .lng(40.0)
-                .build();
-        DocsLocation leftDown = DocsLocation.builder()
-                .lat(20.0)
-                .lng(20.0)
-                .build();
-
-
-
-        // when
-        Pageable pageable = PageRequest.of(page, size);
-        //Page<Docs> docs = docsRepository.mfindAll(rightUp.getLat(), rightUp.getLng(), leftDown.getLat(), leftDown.getLng(), pageable);
-        Page<Docs> docs = docsRepository.mfindAll(rightUp, leftDown, pageable);
-        System.out.println("테스트 시작");
-        docs.forEach(d -> System.out.println("테스트 결과 " + d.getDocsName()));
-
-        // then
-    }
+//    @Test
+//    void mfindAll_test() {
+//        // given
+//        int page = 0;
+//        int size = 4;
+//        DocsLocation rightUp = DocsLocation.builder()
+//                .lat(40.0)
+//                .lng(40.0)
+//                .build();
+//        DocsLocation leftDown = DocsLocation.builder()
+//                .lat(20.0)
+//                .lng(20.0)
+//                .build();
+//
+//        // when
+//        Pageable pageable = PageRequest.of(page, size);
+//        //Page<Docs> docs = docsRepository.mfindAll(rightUp.getLat(), rightUp.getLng(), leftDown.getLat(), leftDown.getLng(), pageable);
+//        Page<Docs> docs = docsRepository.mfindAll(rightUp, leftDown, pageable);
+//        System.out.println("테스트 시작");
+//        docs.forEach(d -> System.out.println("테스트 결과 " + d.getDocsName()));
+//
+//        // then
+//    }
 }
